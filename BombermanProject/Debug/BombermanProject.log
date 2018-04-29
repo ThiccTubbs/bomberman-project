@@ -1,0 +1,4 @@
+﻿  Main.cpp
+f:\documents\visual studio 2015\projects\bombermanproject\bombermanproject\main.cpp(42): warning C4101: 'event': unreferenced local variable
+  BombermanProject.vcxproj -> f:\documents\visual studio 2015\Projects\BombermanProject\Debug\BombermanProject.exe
+  BombermanProject.vcxproj -> f:\documents\visual studio 2015\Projects\BombermanProject\Debug\BombermanProject.pdb (Partial PDB)
