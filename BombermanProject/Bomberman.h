@@ -20,6 +20,9 @@ public:
 
 	void die(SDL_Rect dyingBomberman[8], SDL_Surface* screenSurface, SDL_Rect destination, SDL_Window* window);
 
+	int getPositionX();
+
+	int getPositionY();
 
 private:
 	// Constantes

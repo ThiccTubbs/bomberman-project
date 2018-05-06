@@ -173,6 +173,16 @@ void Bomberman::die(SDL_Rect dyingBomberman[8], SDL_Surface * screenSurface, SDL
 	}
 }
 
+int Bomberman::getPositionX()
+{
+	return positionImageX;
+}
+
+int Bomberman::getPositionY()
+{
+	return positionImageY;
+}
+
 
 Bomberman::~Bomberman()
 {
