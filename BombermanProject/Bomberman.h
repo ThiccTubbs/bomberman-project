@@ -9,25 +9,43 @@ public:
 
 	// Méthodes
 
-	void changeDirection(const Uint8 * keys, int tempsPrecedent, SDL_Surface* screenSurface);
+	void changeDirection(const Uint8 * keys, SDL_Surface* screenSurface, SDL_Rect tblRectMap[13][15], int tblIntMap[13][15]);
+
 	/*
 	Fonction pour faire marcher le bonhomme
-	dep: déplacement sur la spritesheet
-	tempsPrecedent: la derniére fois que PollEvent a retourné 1 en millisecondes
-	depLastSprite: true si on était à la fin de la spritesheet, false si on était au début
+	lastTime: la dernière fois que PollEvent a retourné 1 en millisecondes
+	screenSurface: surface sur laquelle le bomberman est affiché
 	*/
-	void walk(int &tempsPrecedent, SDL_Surface* screenSurface);
+	void walk(float &lastTime, SDL_Surface* screenSurface);
 
+	/*
+	Fonction pour faire marcher le bonhomme
+	dyingBomberman: tableau contenant les sprites d'animation de la mort du bomberman
+	screenSurface: surface sur laquelle le bomberman est affiché
+	destination: position à laquelle le bomberman se situe à sa mort et où l'animation doit se faire
+	window: pour rafraîchir l'affichage dans la fenêtre
+	*/
 	void die(SDL_Rect dyingBomberman[8], SDL_Surface* screenSurface, SDL_Rect destination, SDL_Window* window);
 
+	int getPositionX();
+	int getPositionY();
+	SDL_Rect getDestination();
+
+	int getEndX();
+	int getEndY();
+
+	int startX;
+	int startY;
+	int endX;
+	int endY;
 
 private:
 	// Constantes
 	const int IDLE_SPRITE_ANIMATION_INDEX = 2;
 	const char *WALKING_SPRITES_FILE = "bomberman.bmp";
 	const char *DYING_SPRITES_FILE = "bombermandie.bmp";
-	const float INITIAL_X_POSITION = 0.0f;
-	const float INITIAL_Y_POSITION = 0.0f;
+	const float INITIAL_X_POSITION = 50.0f;
+	const float INITIAL_Y_POSITION = 50.0f;
 	const int DYING_ANIMATION_FRAMES = 8;
 	const int WALKING_DIRECTIONS_FRAMES = 4;
 	const int WALKING_FRAMES = 5;

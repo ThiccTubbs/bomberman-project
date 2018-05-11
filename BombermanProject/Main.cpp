@@ -1,63 +1,40 @@
-#include <SDL.h>
+// BombermanProject.cpp: définit le point d'entrée pour l'application console.
+
 #include <iostream>
-#include "Bomberman.h"
+#include <string>
+#include <SDL.h>
+#include "Game.h"
+
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
-	if (SDL_Init(SDL_INIT_VIDEO) == -1)	// Error case
+	SDL_Window* window = NULL; // Fenêtre
+
+	SDL_Surface* background = NULL; // Arrière-plan
+
+	const int LARGEUR = 750; // Largeur de l'écran
+	const int HAUTEUR = 650; // Hauteur de l'écran
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{
-		cout << "Erreur lors de l'initialisation de la SDL", SDL_GetError();
+		cout << "Erreur lors de l'initialisation de la SDL", SDL_GetError(); // S'il y a une erreur
 		exit(EXIT_FAILURE);
 	}
 
-	int tempsPrecedent = 0;
+	// Créer la fenêtre
+	window = SDL_CreateWindow("Bomberman", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, LARGEUR, HAUTEUR, SDL_WINDOW_SHOWN);
 
-	// The window we'll be rendering to 
-	SDL_Window* window = NULL;
-	// The surface contained by the window 
-	SDL_Surface* screenSurface = NULL;
+	// Obtenir la surface de la fenêtre
+	background = SDL_GetWindowSurface(window);
 
-	// Taille de la fenêtre
-	int windowWidth = 800;
-	int windowHeight = 600;
+	Game* game = new Game(window, background);
 
-	window = SDL_CreateWindow("Bomberman", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
+	game->start();
 
-	// Get window surface 
-	screenSurface = SDL_GetWindowSurface(window);
+	SDL_DestroyWindow(window); // Détruire la fenêtre
 
+	SDL_Quit(); // Arrêt de SDL (libération de la mémoire)
 
-	// Création du personnage Bomberman
-	Bomberman john(window);
-
-	bool endGame = false;
-
-	while (endGame == false) // Until user wants to close the window
-	{
-		// Nettoyer l'écran
-		SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 32, 32, 0));
-
-		// Lire l'événement
-		SDL_Event event;
-
-		SDL_PumpEvents();
-		const Uint8 * keys = SDL_GetKeyboardState(NULL);
-
-		if (keys[SDL_GetScancodeFromKey(SDLK_ESCAPE)]) { // User requests quit 
-			endGame = true;
-		}
-
-		john.changeDirection(keys, tempsPrecedent, screenSurface);
-		
-		john.walk(tempsPrecedent, screenSurface);
-
-		SDL_UpdateWindowSurface(window); // Update the surface
-
-	}
-	
-	SDL_DestroyWindow(window);
-	window = NULL; //Quit SDL subsystems 
-	SDL_Quit();
 	return EXIT_SUCCESS;
 }

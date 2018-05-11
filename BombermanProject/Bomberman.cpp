@@ -27,9 +27,9 @@ Bomberman::Bomberman(SDL_Window* w)
 
 void Bomberman::initializeSprites(SDL_Rect walkingBomberman[4][5], SDL_Rect dyingBomberman[8]) {
 
-	
+
 	SDL_SetColorKey(walkingSprites, SDL_TRUE, SDL_MapRGB(walkingSprites->format, 255, 0, 0)); // Set transparency
-		
+
 	SDL_SetColorKey(dyingSprites, SDL_TRUE, SDL_MapRGB(dyingSprites->format, 255, 0, 0)); // Set transparency
 
 	initializeWalkingSprites(walkingBomberman);
@@ -97,26 +97,33 @@ void Bomberman::initializeDyingSprites(SDL_Rect dyingBomberman[8]) { // Initiali
 
 }
 
-void Bomberman::changeDirection(const Uint8 * keys, int tempsPrecedent, SDL_Surface* screenSurface) {
+void Bomberman::changeDirection(const Uint8 * keys, SDL_Surface* screenSurface, SDL_Rect tblRectMap[13][15], int tblIntMap[13][15]) {
+
+	SDL_Rect nextDestination;
+	float prochainePositionX = positionImageX;
+	float prochainePositionY = positionImageY;
 
 	if (keys[SDL_GetScancodeFromKey(SDLK_d)]) {
 		dir = 1;
-		positionImageX += 0.2f;
+		prochainePositionX += 0.2f;
 		animateWalk = true;
 	}
+
 	else if (keys[SDL_GetScancodeFromKey(SDLK_a)]) {
 		dir = 3;
-		positionImageX -= 0.2f;
+		prochainePositionX -= 0.2f;
 		animateWalk = true;
 	}
+
 	else if (keys[SDL_GetScancodeFromKey(SDLK_w)]) {
 		dir = 2;
-		positionImageY -= 0.2f;
+		prochainePositionY -= 0.2f;
 		animateWalk = true;
 	}
+
 	else if (keys[SDL_GetScancodeFromKey(SDLK_s)]) {
 		dir = 0;
-		positionImageY += 0.2f;
+		prochainePositionY += 0.2f;
 		animateWalk = true;
 	}
 
@@ -125,18 +132,29 @@ void Bomberman::changeDirection(const Uint8 * keys, int tempsPrecedent, SDL_Surf
 		animateWalk = false;
 	}
 
-	destination.x = positionImageX;
-	destination.y = positionImageY;
-	destination.w = 100;
-	destination.h = 100;
+	nextDestination.x = prochainePositionX;
+	nextDestination.y = prochainePositionY;
+	nextDestination.w = 100;
+	nextDestination.h = 100;
 
+	startX = nextDestination.x / 50;
+	startY = nextDestination.y / 50;
+	endX = (nextDestination.x + 21) / 50;
+	endY = (nextDestination.y + 32) / 50;
+
+	if (tblIntMap[startY][startX] == 0 && tblIntMap[endY][endX] == 0 && tblIntMap[endY][startX] == 0 && tblIntMap[startY][endX] == 0) {
+		destination = nextDestination;
+		positionImageX = prochainePositionX;
+		positionImageY = prochainePositionY;
+	}
 
 }
 
-void Bomberman::walk(int &tempsPrecedent, SDL_Surface* screenSurface) {
-	int tempsActuel = SDL_GetTicks(); // Temps actuel = le temps écoulé depuis l'exécution du programme en millisecondes
+void Bomberman::walk(float &lastTime, SDL_Surface* screenSurface) {
 
-	if (animateWalk && (tempsActuel - tempsPrecedent) > 70) // Si 70 ms se sont écoulées
+	int currentTime = SDL_GetTicks();
+
+	if (animateWalk && (currentTime - lastTime) > 70) // Si 70 ms se sont écoulées
 	{
 		if (depLastSprite == true) {
 			dep--;
@@ -153,7 +171,7 @@ void Bomberman::walk(int &tempsPrecedent, SDL_Surface* screenSurface) {
 			}
 		}
 
-		tempsPrecedent = tempsActuel; // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
+		lastTime = currentTime; // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
 
 	}
 
@@ -174,10 +192,33 @@ void Bomberman::die(SDL_Rect dyingBomberman[8], SDL_Surface * screenSurface, SDL
 }
 
 
+int Bomberman::getPositionX()
+{
+	return 0;
+}
+
+int Bomberman::getPositionY()
+{
+	return positionImageY;
+}
+
+SDL_Rect Bomberman::getDestination() {
+	return destination;
+}
+
+int Bomberman::getEndX() {
+	return endX;
+}
+
+int Bomberman::getEndY() {
+	return endY;
+}
+
 Bomberman::~Bomberman()
 {
 	SDL_FreeSurface(walkingSprites);
-	walkingSprites = NULL; //Destroy window 
+	walkingSprites = NULL; 
+	dyingSprites = NULL;
 }
 
 
