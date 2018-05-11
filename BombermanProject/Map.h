@@ -10,9 +10,6 @@ class Map
 {
 private:
 
-	SDL_Rect tabRectMap[13][15];
-	int tblIntMap[13][15];
-
 	int positionImageX;
 	int positionImageY;
 	int valeurMap;
@@ -21,7 +18,7 @@ private:
 
 	ifstream entree;
 
-	string map;
+	string mapFile;
 
 	SDL_Surface* indestructible;
 	SDL_Surface* destructible;  // Bloc destructible
@@ -29,15 +26,20 @@ private:
 
 public:
 
-	Map(); //Constructeur de la classe
-	~Map();//Destructeur
+	SDL_Rect tblRectMap[13][15];
+	int tblIntMap[13][15];
+	Map(); // Constructeur de la classe
+	~Map();	// Destructeur
+
 
 	void jeuCommencer();
-	void ecranTitre(SDL_Surface* background);
-	void genererMap();
 	void ouvrirFichier();
 	void lireFichier();
+	void generateMap(SDL_Surface * background);
+	void initialiserRectPosition(SDL_Rect tabRectMap[13][15]);
 	void reinitialisation();
-	bool getShowTitle();
+
+	void destroyWalls(SDL_Rect positionBombe, bool explosion);
+
 
 };

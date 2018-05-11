@@ -1,5 +1,3 @@
-﻿  Main.cpp
-d:\ti\c++\bomberman\bomberman-project\bomberman-project\bombermanproject\main.cpp(62): warning C4244: '=': conversion from 'Uint32' to 'float', possible loss of data
-d:\ti\c++\bomberman\bomberman-project\bomberman-project\bombermanproject\main.cpp(108): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  BombermanProject.vcxproj -> D:\TI\C++\Bomberman\bomberman-project\bomberman-project\Debug\BombermanProject.exe
-  BombermanProject.vcxproj -> D:\TI\C++\Bomberman\bomberman-project\bomberman-project\Debug\BombermanProject.pdb (Partial PDB)
+﻿  Bomb.cpp
+  BombermanProject.vcxproj -> D:\TI\C++\Bomberman\bomberman-project\BombermanProject\Debug\BombermanProject.exe
+  BombermanProject.vcxproj -> D:\TI\C++\Bomberman\bomberman-project\BombermanProject\Debug\BombermanProject.pdb (Partial PDB)

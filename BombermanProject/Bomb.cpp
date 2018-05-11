@@ -1,6 +1,6 @@
 #include "Bomb.h"
 
-Bombe::Bombe() //Constructeur de la bombe
+Bomb::Bomb() //Constructeur de la bombe
 {
 	nbBombeEnJeu = 0;
 	nbBombeInventaire = 1;
@@ -24,13 +24,13 @@ Bombe::Bombe() //Constructeur de la bombe
 
 }
 
-Bombe::~Bombe() //Déconstructeur
+Bomb::~Bomb() //Déconstructeur
 {
 	SDL_FreeSurface(bombe);
 	SDL_FreeSurface(explosion);
 }
 
-void Bombe::faireBombe() //Faire le sprite de la bombe
+void Bomb::faireBombe() //Faire le sprite de la bombe
 {
 	int j = 0,	//Compteur de la boucle
 		x = 0,	//Posiiton colonne sprite
@@ -51,16 +51,14 @@ void Bombe::faireBombe() //Faire le sprite de la bombe
 	}
 }
 
-void Bombe::faireExplosion() //Faire le sprite de l'explosion
+void Bomb::faireExplosion() //Faire le sprite de l'explosion
 {
-	int j = 0,	//Compteur de la deuxième boucle
-		x = 0,	//Position colonne
+	int x = 0,	//Position colonne
 		y = 0;	//Position ligne
 
-	for (int i = 0; i < 7; i++) //Ligne
-	{
-		for (j = 0; j < 4; j++) //Colonne
-		{
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 4; j++) {
+
 			explosionSprite[i][j].x = x;
 			explosionSprite[i][j].y = y;
 			explosionSprite[i][j].h = 32;
@@ -68,11 +66,12 @@ void Bombe::faireExplosion() //Faire le sprite de l'explosion
 
 			x += 32; //Change de colonne
 		}
+
 		y += 32; //Change de ligne
 	}
 }
 
-void Bombe::animerBombe(float &timeFrame) //Animation de la bombe
+void Bomb::animerBombe(float &timeFrame) //Animation de la bombe
 {
 	if (timeFrame > 100 && showBombe == true)//Si une seconde est passé
 	{
@@ -90,14 +89,13 @@ void Bombe::animerBombe(float &timeFrame) //Animation de la bombe
 				showBombe = false;		//On ne montre plus la bombe
 				completeAnimation = 0;	//Réinitialise le nombre d'animations à 0
 				showExplosion = true;  //La bombe explose
-				nbBombeEnJeu -= 1;	//Avoir la bombe a nouveau
 			}
 
 		}
 	}
 }
 
-bool Bombe::montrerBombe() //On vérifie s'il est possible de poser une bombe
+bool Bomb::montrerBombe() //On vérifie s'il est possible de poser une bombe
 {
 	if (nbBombeEnJeu < nbBombeInventaire)
 	{
@@ -107,26 +105,29 @@ bool Bombe::montrerBombe() //On vérifie s'il est possible de poser une bombe
 	return false;
 }
 
-void Bombe::poserBombe() //On pose une bombe
+void Bomb::poserBombe() // On pose une bombe
 {
 	showBombe = true;
 	nbBombeEnJeu += 1;
 	explosionEnCours = true;
 }
 
-void Bombe::initializePosBombe(int posBonhommeX, int posBonhommeY)//Donner la position de la bombe
+void Bomb::initializePosBombe(SDL_Rect positionBonhomme) // Donner la position de la bombe
 {
+	int posX = (positionBonhomme.x + 10) / 50;
+	int posY = (positionBonhomme.y + 16) / 50;
+
 	if (nbBombeEnJeu < nbBombeInventaire)
 	{
 		posBombe.h = 100;
 		posBombe.w = 100;
-		posBombe.x = posBonhommeX - 10;
-		posBombe.y = posBonhommeY - 10;
+		posBombe.x = posX * 50;
+		posBombe.y = posY * 50;
 	}
 
 }
 
-void Bombe::initializePosExplosion() //Position fixe de l'explosion
+void Bomb::initializePosExplosion() //Position fixe de l'explosion
 {
 	posExplosion.h = 100;
 	posExplosion.w = 100;
@@ -139,7 +140,7 @@ void Bombe::initializePosExplosion() //Position fixe de l'explosion
 
 }
 
-void Bombe::animerExplosion(float timeFrame, SDL_Surface* background) //L'animation de l'explosion
+void Bomb::animerExplosion(float timeFrame, SDL_Surface* background) //L'animation de l'explosion
 {
 
 	if (showExplosion == true)
@@ -174,16 +175,25 @@ void Bombe::animerExplosion(float timeFrame, SDL_Surface* background) //L'animat
 		{
 			showExplosion = false;
 			explosionEnCours = false;
+			nbBombeEnJeu -= 1;	//Avoir la bombe a nouveau
 		}
 
-		//NOTE: LE RECTANGLE DE LA BOMBE DOIT ETRE REPOSITIONER A LA POSITION DU BOMBER MAN
+		// NOTE: LE RECTANGLE DE LA BOMBE DOIT ETRE REPOSITIONER A LA POSITION DU BOMBER MAN
 	}
 }
 
-void Bombe::faireApparaitreBombe(SDL_Surface* background) //Faire apparaitre la bombe sur la surface
+void Bomb::faireApparaitreBombe(SDL_Surface* background) // Faire apparaitre la bombe sur la surface
 {
-	if (showBombe == true) //Si on peut montrer la bombe et si on peut montrer le sprite sans produire un rectangle invisible
+	if (showBombe == true) // Si on peut montrer la bombe et si on peut montrer le sprite sans produire un rectangle invisible
 	{
-		SDL_BlitSurface(bombe, &bombeSprite[bombeSpriteX][bombeSpriteY], background, &posBombe); //Faire apparaitre la bombe si on peut la montrer
+		SDL_BlitSurface(bombe, &bombeSprite[bombeSpriteX][bombeSpriteY], background, &posBombe); // Faire apparaitre la bombe si on peut la montrer
 	}
+}
+
+SDL_Rect Bomb::getPositionBomb() {
+	return posBombe;
+}
+
+bool Bomb::getExplosion() {
+	return showExplosion;
 }
